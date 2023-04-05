@@ -4,8 +4,6 @@ import { galleryItems } from './gallery-items.js';
 const galleryContainer = document.querySelector('ul.gallery');
 const galerryMarkup = createGalerryMarkup(galleryItems);
 
-let largeImageUrl;
-
 galleryContainer.insertAdjacentHTML('beforeend', galerryMarkup);
 
 galleryContainer.addEventListener('click', onGalleryContainerClick);
@@ -30,14 +28,22 @@ function createGalerryMarkup(images) {
 }
 
 function onGalleryContainerClick(e) {
-  e.preventDefault();
-
-  const isGalerryLink = e.target.closest('.gallery__link');
-
-  if (!isGalerryLink) {
+  if (!e.target.closest('.gallery__link')) {
     return;
   }
-  largeImageUrl = e.target.dataset.source;
-  console.log(e.target.dataset.source);
-  return largeImageUrl;
+
+  e.preventDefault();
+
+  const largeImageUrl = e.target.dataset.source;
+  const instance = basicLightbox.create(`<img src="${largeImageUrl}">`);
+
+  instance.show();
+  window.addEventListener('keydown', onEscapeBtnPressed);
+
+  function onEscapeBtnPressed(e) {
+    if (e.code === 'Escape') {
+      instance.close();
+      window.removeEventListener('keydown', onEscapeBtnPressed);
+    }
+  }
 }
