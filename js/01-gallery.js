@@ -4,6 +4,8 @@ import { galleryItems } from './gallery-items.js';
 const galleryContainer = document.querySelector('ul.gallery');
 const galerryMarkup = createGalerryMarkup(galleryItems);
 
+let instance;
+
 galleryContainer.insertAdjacentHTML('beforeend', galerryMarkup);
 
 galleryContainer.addEventListener('click', onGalleryContainerClick);
@@ -35,15 +37,15 @@ function onGalleryContainerClick(e) {
   e.preventDefault();
 
   const largeImageUrl = e.target.dataset.source;
-  const instance = basicLightbox.create(`<img src="${largeImageUrl}">`);
+  instance = basicLightbox.create(`<img src="${largeImageUrl}">`);
 
   instance.show();
   window.addEventListener('keydown', onEscapeBtnPressed);
+}
 
-  function onEscapeBtnPressed(e) {
-    if (e.code === 'Escape') {
-      instance.close();
-      window.removeEventListener('keydown', onEscapeBtnPressed);
-    }
+function onEscapeBtnPressed(e) {
+  if (e.code === 'Escape') {
+    instance.close();
+    window.removeEventListener('keydown', onEscapeBtnPressed);
   }
 }
